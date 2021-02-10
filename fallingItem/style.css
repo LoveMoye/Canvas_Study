@@ -1,0 +1,22 @@
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+
+.control {
+    display: flex;
+    position: relative;
+    top: -80vh;
+    left: 40vw;;
+}
+
+.button {
+    width: 100px;
+    height: 40px;
+    margin: 0 5px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background: transparent;
+}

@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.control {
+    display: flex;
+    width: 100%;
+    position: relative;
+    top: -80vh;
+    left: 40vw;
+}
+
+.button {
+    width: 100px;
+    height: 40px;
+    margin: 0 5px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background: transparent;
+}
+
