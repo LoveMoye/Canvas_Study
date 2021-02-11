@@ -1,3 +1,4 @@
+// x, y => the coordinate of the center of gravity
 class CanvasObject {
     constructor(ctx, x, y, dx, dy, speed) {
         this.ctx = ctx;
@@ -30,57 +31,52 @@ class Square extends CanvasObject {
 
         this.coordinate = [
             {
-                x: rotation(this.x, this.y, this.x - this.w/2, this.y - this.h/2, this.a, false).x,
-                y: rotation(this.x, this.y, this.x - this.w/2, this.y - this.h/2, this.a, false).y,
+                x: this.x,
+                y: this.y
             },
             {
-                x: rotation(this.x, this.y, this.x + this.w/2, this.y - this.h/2, this.a, false).x,
-                y: rotation(this.x, this.y, this.x + this.w/2, this.y - this.h/2, this.a, false).y
+                x: this.x + this.w*Math.cos(Math.PI/180*this.a),
+                y: this.y + this.w*Math.sin(Math.PI/180*this.a)
             },
             {
-                x: rotation(this.x, this.y, this.x + this.w/2, this.y + this.h/2, this.a, false).x,
-                y: rotation(this.x, this.y, this.x + this.w/2, this.y + this.h/2, this.a, false).y
+                x: this.x + this.w*Math.cos(Math.PI/180*this.a) - this.h*Math.sin(Math.PI/180*this.a),
+                y: this.y + this.w*Math.sin(Math.PI/180*this.a) + this.h*Math.cos(Math.PI/180*this.a)
             },
             {
-                x: rotation(this.x, this.y, this.x - this.w/2, this.y + this.h/2, this.a, false).x,
-                y: rotation(this.x, this.y, this.x - this.w/2, this.y + this.h/2, this.a, false).y
+                x: this.x - this.h*Math.sin(Math.PI/180*this.a),
+                y: this.y + this.h*Math.cos(Math.PI/180*this.a)
             }
         ]
         this.color = Square.colors[parseInt(getRandomNumberRange(0,3))]+Square.opacity;
     }
 
     getBottom() {
-        return Math.max(this.coordinate[0].y, this.coordinate[1].y,this.coordinate[2].y,this.coordinate[3].y)
+        if(this.a >= 180 && this.a <= 270) {
+            return this.y;
+        } else if (this.a >= 0 && this.a < 90) {
+            return this.y + this.h * Math.cos(Math.PI/180*this.a) + this.w * Math.sin((Math.PI/180)*this.a);
+        } else if (this.a >= 90 && this.a < 180) {
+            return this.y + this.w*Math.sin(Math.PI/180*this.a);
+        } else {
+            return this.y + this.h*Math.cos(Math.PI/180*this.a);
+        }
     }
 
     draw() {
-        console.log(this.coordinate);
+        // console.log(this.coordinate);
         this.ctx.fillStyle = this.color;
         this.ctx.save();
         this.ctx.translate(this.x, this.y);
         this.ctx.rotate((Math.PI/180)*this.a);
-        this.ctx.beginPath();
-        // right top vertex
-        this.ctx.moveTo(this.w/2, -this.h/2);
-        // right edge
-        this.ctx.lineTo(this.w/2, this.h/2);
-        // bottom edge
-        this.ctx.lineTo(-this.w/2, this.h/2);
-        // left edge
-        this.ctx.lineTo(-this.w/2, -this.h/2);
-        // top edge
-        this.ctx.lineTo(this.w/2, -this.h/2);
-        this.ctx.fill();
+        this.ctx.fillRect(0, 0, this.w, this.h); 
         this.ctx.restore();
     }
 
     vertexDraw() {
-        let origin = new Circle(ctx, this.x, this.y, 5, 0, 0, 0)
         let circle1 = new Circle(ctx, this.coordinate[0].x, this.coordinate[0].y, 5, 0, 0, 0);
         let circle2 = new Circle(ctx, this.coordinate[1].x, this.coordinate[1].y, 5, 0, 0, 0);
         let circle3 = new Circle(ctx, this.coordinate[2].x, this.coordinate[2].y, 5, 0, 0, 0);
         let circle4 = new Circle(ctx, this.coordinate[3].x, this.coordinate[3].y, 5, 0, 0, 0);
-        origin.draw();
         circle1.draw();
         circle2.draw();
         circle3.draw();
@@ -92,14 +88,14 @@ class Square extends CanvasObject {
         this.y += this.dy; // dy만큼 이동
         this.a = this.a%360; // 각도 360도 내 범위로 변경
 
-        this.coordinate[0].x = rotation(this.x, this.y, this.x-this.w/2, this.y-this.h/2, this.a, false).x;
-        this.coordinate[0].y = rotation(this.x, this.y, this.x-this.w/2, this.y-this.h/2, this.a, false).y;
-        this.coordinate[1].x = rotation(this.x, this.y, this.x+this.w/2, this.y-this.h/2, this.a, false).x;
-        this.coordinate[1].y = rotation(this.x, this.y, this.x+this.w/2, this.y-this.h/2, this.a, false).y;
-        this.coordinate[2].x = rotation(this.x, this.y, this.x+this.w/2, this.y+this.h/2, this.a, false).x;
-        this.coordinate[2].y = rotation(this.x, this.y, this.x+this.w/2, this.y+this.h/2, this.a, false).y;
-        this.coordinate[3].x = rotation(this.x, this.y, this.x-this.w/2, this.y+this.h/2, this.a, false).x;
-        this.coordinate[3].y = rotation(this.x, this.y, this.x-this.w/2, this.y+this.h/2, this.a, false).y;
+        this.coordinate[0].x = this.x;
+        this.coordinate[0].y = this.y;
+        this.coordinate[1].x = this.x + this.w*Math.cos(Math.PI/180*this.a);
+        this.coordinate[1].y = this.y + this.w*Math.sin(Math.PI/180*this.a);
+        this.coordinate[2].x = this.x + this.w*Math.cos(Math.PI/180*this.a) - this.h*Math.sin(Math.PI/180*this.a);
+        this.coordinate[2].y = this.y + this.w*Math.sin(Math.PI/180*this.a) + this.h*Math.cos(Math.PI/180*this.a);
+        this.coordinate[3].x = this.x - this.h*Math.sin(Math.PI/180*this.a);
+        this.coordinate[3].y = this.y + this.h*Math.cos(Math.PI/180*this.a);
     }
 
     bounce() {
@@ -256,38 +252,3 @@ class Square extends CanvasObject {
         }
     }
 }
-
-
-
-// Circle Object
-class Circle extends CanvasObject {
-
-    static colors = ['#FFFFFF'];
-    static opacity = '99';
-
-    constructor(ctx, x, y, radius, dx, dy, speed) {
-        super(ctx, x, y, dx, dy, speed);
-        this.radius = radius;
-
-        this.color = Circle.colors[0]+Circle.opacity;
-    }
-
-    draw() {
-        this.ctx.fillStyle = this.color;
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-        this.ctx.fill();
-    }
-
-    mouseMove() {
-        let prevX = this.x;
-        let prevY = this.y;
-        canvas.addEventListener("mousemove", e => {
-            this.x = e.clientX;
-            this.y = e.clientY;
-            this.dx = this.x - prevX;
-            this.dy = this.y - prevY;
-        });
-    }
-}
-
